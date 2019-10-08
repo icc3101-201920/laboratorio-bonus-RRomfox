@@ -10,8 +10,7 @@ namespace big_sister_base
 {
     public class LittleGuy
     {
-        public delegate bool AddProductEventHandler(object source, EventArgs args);
-
+        public delegate void AddProductEventHandler(object source, AddingProductEventArgs args);
         public event AddProductEventHandler AddedProduct;
 
         private Cart cart;
@@ -88,10 +87,10 @@ namespace big_sister_base
             }
         }
 
-        public void AddProduct(Product product)
+        public void AddProduct(Product product, Cart cart)
         {
             Cart.Products.Add(product);
-            OnAddedProduct();
+            OnAddedProduct(cart);
         }
 
         public void RemoveProduct(Product product)
@@ -162,13 +161,12 @@ namespace big_sister_base
         }
 
 
-        protected virtual bool OnAddedProduct()
+        protected virtual void OnAddedProduct(Cart cart)
         {
             if (AddedProduct != null)
             {
-                AddedProduct(this, EventArgs.Empty);
+                AddedProduct(this, new AddingProductEventArgs() { Cart = cart});
             }
-            return true;
         }
 
         //public bool LetItemStay(string newPass, string newPassConf)

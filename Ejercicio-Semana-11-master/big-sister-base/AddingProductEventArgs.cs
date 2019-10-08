@@ -4,9 +4,8 @@ using System.Text;
 
 namespace big_sister_base
 {
-    public class AddingProductEventArgs
+    public class AddingProductEventArgs:EventArgs
     {
-        public List<string> CartProducts { get; set; }
-        public List<string> ListProducts { get; set; }
+        public Cart Cart { get; set; }
     }
 }

@@ -7,25 +7,15 @@ namespace big_sister_base
 {
     public class BigSister
     {
-        public bool OnAddedProduct(object source, EventArgs e)
+        public void OnAddedProduct(object source, AddingProductEventArgs e)
         {
+            Console.WriteLine("\nBig sister is watching from afar...\n");
 
-            
-            Console.WriteLine("Checker: Success, product is in the list");
+            foreach(Product p in e.Cart.Products)
+            {
+                Console.WriteLine(p.Name);
+            }
             Thread.Sleep(3000);
-            return true;
-            //if (e.CartProducts.Equals(e.ListProducts))
-            //{
-            //    Thread.Sleep(3000);
-            //    Console.WriteLine("Checker: Success, product is in the list");
-            //    return true;
-            //}
-            //else
-            //{
-            //    Thread.Sleep(3000);
-            //    Console.WriteLine($"Checker: Error, product is not in the list");
-            //    return false;
-            //}
         }
     }
 }
