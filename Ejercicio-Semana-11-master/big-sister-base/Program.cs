@@ -9,6 +9,8 @@ namespace big_sister_base
         {
             LittleGuy littleGuy = new LittleGuy();
             Market market = new Market();
+            BigSister bigSister = new BigSister();
+            littleGuy.AddedProduct += bigSister.OnAddedProduct;
             bool continueCycle = true;
             while (continueCycle)
             {
