@@ -10,7 +10,7 @@ namespace big_sister_base
 {
     public class LittleGuy
     {
-        public delegate void AddProductEventHandler(object source, AddingProductEventArgs args);
+        public delegate bool AddProductEventHandler(object source, AddingProductEventArgs args);
         public event AddProductEventHandler AddedProduct;
 
         private Cart cart;
@@ -28,31 +28,23 @@ namespace big_sister_base
 
         public Cart Cart { get => cart; private set => cart = value; }
 
+        public List<Product> ShopList { get => shopList; }
+
 
         public void Generatelist()
         {
             shopList.Add(new Product("Leche Entera", 820, 1, "1L"));
-            shopList.Add(new Product("Gomitas Flipy", 720, 0, "100g"));
             shopList.Add(new Product("Mantequilla", 850, 1, "125g"));
-            shopList.Add(new Product("Crema para hemorroides", 4990, 0, "300cc"));
             shopList.Add(new Product("Pimienta", 430, 1, "15g"));
-            shopList.Add(new Product("Vino Sauvignon Blanc Reserva Botella", 4150, 1, "750cc"));
             shopList.Add(new Product("Sal Lobos", 330, 1, "1kg"));
-            shopList.Add(new Product("Cuaderno Mi Pequeño Pony", 1290, 0, "1un"));
             shopList.Add(new Product("Láminas de Lasaña", 1250, 1, "400g"));
-            shopList.Add(new Product("Tomate", 1290, 0, "1kg"));
             shopList.Add(new Product("Harina", 890, 1, "1kg"));
-            shopList.Add(new Product("Audifonos Samsung", 5990, 0, "1un"));
-            shopList.Add(new Product("Pisco Alto del Carmen", 5990, 0, "1L"));
             shopList.Add(new Product("Carne Molida", 4390, 1, "500g"));
             shopList.Add(new Product("Aceite de Oliva", 1790, 1, "250g"));
-            shopList.Add(new Product("Sal parrillera", 840, 0, "750g"));
-            shopList.Add(new Product("Cable HDMI 1m", 3990, 0, "1un"));
             shopList.Add(new Product("Queso Rallado Parmesano", 499, 1, "40g"));
             shopList.Add(new Product("Vino Blanco Caja", 2790, 0, "2L"));
             shopList.Add(new Product("Malla de Cebollas", 1090, 1, "1kg"));
             shopList.Add(new Product("Tomates Pelados en lata", 700, 1, "540g"));
-            shopList.Add(new Product("Queso Parmesano", 3790, 0, "200g"));
             shopList.Add(new Product("Bolsa de Zanahorias", 890, 1, "1un"));
         }
 
@@ -87,10 +79,14 @@ namespace big_sister_base
             }
         }
 
-        public void AddProduct(Product product, Cart cart)
+        public void AddProduct(Product product, Cart cart, List<Product> shopList)
         {
             Cart.Products.Add(product);
-            OnAddedProduct(cart);
+            bool productInList = OnAddedProduct(cart, shopList);
+            if (productInList == false)
+            {
+                RemoveProduct(product);
+            }
         }
 
         public void RemoveProduct(Product product)
@@ -161,12 +157,14 @@ namespace big_sister_base
         }
 
 
-        protected virtual void OnAddedProduct(Cart cart)
+        protected virtual bool OnAddedProduct(Cart cart, List<Product> shopList)
         {
+            bool productInList = true;
             if (AddedProduct != null)
             {
-                AddedProduct(this, new AddingProductEventArgs() { Cart = cart});
+                productInList = AddedProduct(this, new AddingProductEventArgs() { Cart = cart, ShopList = shopList});
             }
+            return productInList;
         }
 
         //public bool LetItemStay(string newPass, string newPassConf)

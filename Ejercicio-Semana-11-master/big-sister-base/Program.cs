@@ -43,7 +43,7 @@ namespace big_sister_base
                         {
                             if (market.Storage[index].Stock > 0)
                             {
-                                littleGuy.AddProduct(market.Storage[index], littleGuy.Cart);
+                                littleGuy.AddProduct(market.Storage[index], littleGuy.Cart, littleGuy.ShopList);
                                 market.removeStorage(index);
                             }
                             else
