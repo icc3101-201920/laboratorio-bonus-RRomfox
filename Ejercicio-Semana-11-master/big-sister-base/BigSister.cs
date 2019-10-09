@@ -10,7 +10,7 @@ namespace big_sister_base
         public bool OnAddedProduct(object source, GeneralEventArgs e)
         {
             Console.WriteLine("\nBig sister is watching from afar...\n");
-            Thread.Sleep(2000);
+            Thread.Sleep(1500);
 
             List<string> checkCart = new List<string>();
             List<string> checkList = new List<string>();
@@ -20,7 +20,10 @@ namespace big_sister_base
             }
             foreach (Product p2 in e.ShopList)
             {
-                checkList.Add(p2.Name);
+                if (p2.Stock == 1)
+                {
+                    checkList.Add(p2.Name);
+                }
             }
 
             bool productInList = true;
@@ -35,20 +38,20 @@ namespace big_sister_base
                     productInList = false;
                     Console.WriteLine("\nBig sister approaches...\n");
                     Thread.Sleep(1500);
-                    Console.WriteLine("\n'That's not necessary, put it back where it belongs to.'\n");
+                    Console.WriteLine("\nThat's not necessary, put it back where it belongs to.\n");
                     break;
                 }
             }
 
 
-            Thread.Sleep(2000);
+            Thread.Sleep(1500);
             return productInList;
         }
 
         public bool OnPayChance(object source, GeneralEventArgs e)
         {
             Console.WriteLine("\nBig sister is watching from afar...\n");
-            Thread.Sleep(2000);
+            Thread.Sleep(1500);
 
             List<string> checkCart = new List<string>();
             List<string> checkList = new List<string>();
@@ -58,7 +61,10 @@ namespace big_sister_base
             }
             foreach (Product p2 in e.ShopList)
             {
-                checkList.Add(p2.Name);
+                if (p2.Stock == 1)
+                {
+                    checkList.Add(p2.Name);
+                }
             }
 
             foreach (string p in checkCart)
@@ -83,7 +89,7 @@ namespace big_sister_base
                 Console.WriteLine("\nTake another walk to see what it missing.\n");
             }
 
-            Thread.Sleep(2000);
+            Thread.Sleep(1500);
             return departure;
         }
     }
