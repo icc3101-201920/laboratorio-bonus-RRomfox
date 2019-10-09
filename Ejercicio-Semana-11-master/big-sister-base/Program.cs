@@ -10,11 +10,10 @@ namespace big_sister_base
             LittleGuy littleGuy = new LittleGuy();
             Market market = new Market();
 
-
-
             BigSister bigSister = new BigSister();
             littleGuy.AddedProduct += bigSister.OnAddedProduct;
-            
+            littleGuy.PayChance += bigSister.OnPayChance;
+
             bool continueCycle = true;
             while (continueCycle)
             {
@@ -65,10 +64,18 @@ namespace big_sister_base
                         break;
                     case "4":
                         Console.Clear();
-                        littleGuy.Pay();
-                        littleGuy.SaveData();
-                        market.SaveStorage();
-                        continueCycle = false;
+                        bool departure = littleGuy.Pay(littleGuy.Cart, littleGuy.ShopList);
+                        if (departure == false)
+                        {
+                            break;
+                        }
+                        if (departure == true)
+                        {
+                            littleGuy.SaveData();
+                            market.SaveStorage();
+                            continueCycle = false;
+                            break;
+                        }
                         break;
                     case "5":
                         Console.Clear();

@@ -10,8 +10,11 @@ namespace big_sister_base
 {
     public class LittleGuy
     {
-        public delegate bool AddProductEventHandler(object source, AddingProductEventArgs args);
+        public delegate bool AddProductEventHandler(object source, GeneralEventArgs args);
         public event AddProductEventHandler AddedProduct;
+
+        public delegate bool PayEventHandler(object source, GeneralEventArgs args);
+        public event PayEventHandler PayChance;
 
         private Cart cart;
         private List<Product> shopList = new List<Product>();
@@ -31,7 +34,7 @@ namespace big_sister_base
         public List<Product> ShopList { get => shopList; }
 
 
-        public void Generatelist()
+        public void Generatelist()  
         {
             shopList.Add(new Product("Leche Entera", 820, 1, "1L"));
             shopList.Add(new Product("Mantequilla", 850, 1, "125g"));
@@ -94,23 +97,35 @@ namespace big_sister_base
             Cart.Products.Remove(product);
         }
 
-        public void Pay()
+        public bool Pay(Cart cart, List<Product> shopList)
         {
-            int total = 0;
-            foreach (Product p in Cart.Products)
+
+            bool departure = OnPayChance(cart, shopList);
+
+            if (departure == false)
             {
-                total += p.Price;
+                Console.WriteLine("cagaste pendejo qlo");
             }
-            Console.WriteLine("El total de tu compra es: $" + total.ToString());
-            Console.Write("Este programa se cerrará en ");
-            for (int i = 5; i > 0; i--)
+
+            if (departure == true)
             {
-                Console.Write(i.ToString() + " ");
-                Thread.Sleep(1000);
+                int total = 0;
+                foreach (Product p in Cart.Products)
+                {
+                    total += p.Price;
+                }
+                Console.WriteLine("El total de tu compra es: $" + total.ToString());
+                Console.Write("Este programa se cerrará en ");
+                for (int i = 5; i > 0; i--)
+                {
+                    Console.Write(i.ToString() + " ");
+                    Thread.Sleep(1000);
+                }
+                shopList = new List<Product>();
+                Generatelist();
+                Cart.Clear();
             }
-            shopList = new List<Product>();
-            Generatelist();
-            Cart.Clear();
+            return departure;
         }
 
         public void ViewCart()
@@ -162,22 +177,21 @@ namespace big_sister_base
             bool productInList = true;
             if (AddedProduct != null)
             {
-                productInList = AddedProduct(this, new AddingProductEventArgs() { Cart = cart, ShopList = shopList});
+                productInList = AddedProduct(this, new GeneralEventArgs() { Cart = cart, ShopList = shopList});
             }
             return productInList;
         }
 
-        //public bool LetItemStay(string newPass, string newPassConf)
-        //{
-        //    if (OnChangingPassword(newPass, newPassConf))
-        //    {
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        return false;
-        //    }
-        //}
+        protected virtual bool OnPayChance(Cart cart, List<Product> shopList)
+        {
+            bool departure = true;
+            if (PayChance != null)
+            {
+                departure = PayChance(this, new GeneralEventArgs() {Cart = cart, ShopList = shopList});
+            }
+            return departure;
+        }
+
 
     }
 }
